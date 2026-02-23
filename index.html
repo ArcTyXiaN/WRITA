@@ -1,0 +1,1258 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Writa</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#d4a853">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:        #111111;
+  --surface:   #1c1c1c;
+  --surface2:  #232323;
+  --surface3:  #2a2a2a;
+  --border:    #2f2f2f;
+  --border2:   #3a3a3a;
+  --accent:    #d4a853;
+  --text:      #e4e4e4;
+  --text-dim:  #888;
+  --text-muted:#555;
+  --danger:    #e05555;
+  --success:   #52a76a;
+  --sidebar-w: 248px;
+  --header-h:  48px;
+  --toolbar-h: 46px;
+  --status-h:  26px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* â”€â”€ SCROLLBARS â”€â”€ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* â”€â”€ HEADER â”€â”€ */
+.header {
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  flex-shrink: 0;
+  z-index: 50;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.menu-toggle:hover { background: var(--surface3); color: var(--text); }
+
+.logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.logo span { color: var(--accent); }
+
+.doc-title-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.doc-title {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 400;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hbtn {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text-dim);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.hbtn:hover { border-color: var(--border2); background: var(--surface3); color: var(--text); }
+.hbtn.accent { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 600; }
+.hbtn.accent:hover { background: #c89940; border-color: #c89940; }
+.hbtn svg { flex-shrink: 0; }
+
+.icon-btn {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.icon-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border2); }
+#mobileNewBtn { display: none; }
+
+/* â”€â”€ BODY â”€â”€ */
+.app-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* â”€â”€ SIDEBAR â”€â”€ */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  z-index: 40;
+}
+
+.sidebar-top {
+  padding: 12px 10px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.new-btn {
+  width: 100%;
+  height: 34px;
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.15s;
+}
+.new-btn:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
+
+.sidebar-label {
+  padding: 12px 12px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.doc-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 6px;
+}
+
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+  position: relative;
+  margin-bottom: 1px;
+}
+.doc-item:hover { background: var(--surface2); }
+.doc-item.active { background: var(--surface3); }
+.doc-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 2px; height: 55%;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+
+.doc-icon {
+  width: 26px; height: 26px;
+  border-radius: 5px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+.doc-item.active .doc-icon { border-color: var(--border2); color: var(--text-dim); }
+
+.doc-info { flex: 1; min-width: 0; }
+.doc-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+.doc-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+.doc-del {
+  opacity: 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+.doc-item:hover .doc-del { opacity: 1; }
+.doc-del:hover { background: rgba(224,85,85,0.15); color: var(--danger); }
+
+.sidebar-stats {
+  padding: 10px 10px;
+  border-top: 1px solid var(--border);
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.stat-cell {
+  background: var(--surface2);
+  padding: 8px 6px;
+  text-align: center;
+}
+.stat-val { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1; }
+.stat-lbl { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+/* â”€â”€ OVERLAY (mobile) â”€â”€ */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 39;
+}
+
+/* â”€â”€ MAIN â”€â”€ */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* â”€â”€ TOOLBAR â”€â”€ */
+.toolbar {
+  height: var(--toolbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 1px;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+.toolbar::-webkit-scrollbar { display: none; }
+
+.tsep { width: 1px; height: 18px; background: var(--border2); margin: 0 4px; flex-shrink: 0; }
+
+.tb {
+  width: 30px; height: 30px;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.12s;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+.tb:hover { background: var(--surface3); color: var(--text); }
+.tb[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: -28px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 200;
+}
+
+.font-sel, .size-sel {
+  height: 28px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  border-radius: 5px;
+  padding: 0 6px;
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+.font-sel { width: 114px; }
+.size-sel { width: 52px; }
+.font-sel:focus, .size-sel:focus { border-color: var(--accent); }
+
+/* â”€â”€ FIND BAR â”€â”€ */
+.find-bar {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.find-bar.open { display: flex; }
+.find-in {
+  height: 28px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 0 9px;
+  border-radius: 5px;
+  outline: none;
+  width: 160px;
+  transition: border-color 0.15s;
+}
+.find-in:focus { border-color: var(--accent); }
+.find-count { font-size: 11px; color: var(--text-muted); min-width: 55px; }
+.fbtn {
+  height: 28px;
+  padding: 0 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.fbtn:hover { border-color: var(--border2); color: var(--text); }
+.find-close-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: color 0.12s;
+}
+.find-close-btn:hover { color: var(--text); }
+
+/* â”€â”€ EDITOR AREA â”€â”€ */
+.editor-wrap {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px 48px;
+}
+
+.page {
+  width: 100%;
+  max-width: 720px;
+  min-height: calc(100vh - var(--header-h) - var(--toolbar-h) - var(--status-h) - 80px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 56px 64px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+}
+
+.editor {
+  width: 100%;
+  min-height: 500px;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  line-height: 1.85;
+  caret-color: var(--accent);
+  user-select: text;
+}
+.editor:empty::before {
+  content: attr(data-ph);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.editor h1 { font-family: 'Lora', serif; font-size: 30px; font-weight: 600; line-height: 1.25; margin-bottom: 16px; color: var(--text); }
+.editor h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 600; line-height: 1.3; margin: 28px 0 10px; }
+.editor h3 { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600; margin: 20px 0 8px; color: var(--text); }
+.editor p  { margin-bottom: 12px; }
+.editor blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 18px;
+  color: var(--text-dim);
+  margin: 18px 0;
+  font-style: italic;
+}
+.editor ul, .editor ol { padding-left: 24px; margin-bottom: 12px; }
+.editor li { margin-bottom: 4px; }
+.editor a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.editor hr { border: none; border-top: 1px solid var(--border2); margin: 24px 0; }
+.editor table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14px; }
+.editor th { background: var(--surface2); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.editor td, .editor th { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+
+/* â”€â”€ STATUS BAR â”€â”€ */
+.statusbar {
+  height: var(--status-h);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+.status-dot.unsaved { background: var(--accent); }
+.status-item { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+
+/* â”€â”€ MODAL â”€â”€ */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+}
+.modal-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+.modal-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; display: block; }
+.modal-input {
+  width: 100%;
+  height: 38px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 0 12px;
+  border-radius: 7px;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.15s;
+}
+.modal-input:focus { border-color: var(--accent); }
+.fmt-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 20px; }
+.fmt-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 4px 8px;
+  cursor: pointer;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  transition: all 0.15s;
+}
+.fmt-card:hover { border-color: var(--border2); background: var(--surface3); }
+.fmt-card.sel { border-color: var(--accent); background: rgba(212,168,83,0.06); }
+.fmt-card svg { color: var(--text-muted); }
+.fmt-card.sel svg { color: var(--accent); }
+.fmt-card .fl { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+.fmt-card.sel .fl { color: var(--accent); }
+.modal-row { display: flex; gap: 8px; justify-content: flex-end; }
+.mbtn {
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 7px;
+  border: 1px solid var(--border2);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mbtn.ghost { background: none; color: var(--text-dim); }
+.mbtn.ghost:hover { color: var(--text); }
+.mbtn.solid { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 600; }
+.mbtn.solid:hover { background: #c89940; }
+
+/* â”€â”€ EXPORT MENU â”€â”€ */
+.export-wrap { position: relative; }
+.exp-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  padding: 4px;
+  min-width: 168px;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.45);
+  z-index: 200;
+  display: none;
+}
+.exp-menu.open { display: block; }
+.exp-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: all 0.1s;
+}
+.exp-item:hover { background: var(--surface2); color: var(--text); }
+
+/* â”€â”€ TOAST â”€â”€ */
+.toast {
+  position: fixed;
+  bottom: 40px; right: 18px;
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  padding: 8px 14px;
+  border-radius: 7px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  display: flex; align-items: center; gap: 7px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.2s;
+  pointer-events: none;
+  z-index: 9999;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* â”€â”€ SELECTION â”€â”€ */
+::selection { background: rgba(212,168,83,0.18); }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+@media (max-width: 768px) {
+  :root { --header-h: 52px; }
+
+  .menu-toggle { display: flex; }
+  #mobileNewBtn { display: flex; }
+
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+
+  .doc-title { display: none; }
+
+  .hbtn span { display: none; }
+  .hbtn { width: 32px; height: 32px; padding: 0; justify-content: center; }
+  .hbtn svg { flex-shrink: 0; }
+
+  .page { padding: 32px 22px; }
+
+  .editor { font-size: 15px; }
+
+  .find-bar { gap: 5px; }
+  .find-in { width: 130px; }
+
+  .toolbar { padding: 0 4px; }
+
+  .doc-title-wrap { flex: 0; }
+
+  .statusbar { gap: 10px; }
+  .statusbar .hide-mobile { display: none; }
+}
+
+@media (max-width: 480px) {
+  .page { padding: 24px 14px; }
+  .editor-wrap { padding: 16px 8px 40px; }
+  .editor { font-size: 15px; line-height: 1.75; }
+  .find-in { width: 110px; }
+  .logo span { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menu">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <div class="logo">WR<span>I</span>TA</div>
+
+  <div class="doc-title-wrap">
+    <div class="doc-title" id="docTitle">Untitled</div>
+  </div>
+
+  <div class="header-actions">
+    <button class="icon-btn" onclick="openModal()" title="New Document" id="mobileNewBtn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="icon-btn" onclick="toggleFind()" title="Find & Replace">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="hbtn" id="installBtn" onclick="installApp()" style="display:none" title="Install App">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span>Install</span>
+    </button>
+
+    <div class="export-wrap">
+      <button class="hbtn" id="expBtn" onclick="toggleExport()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>Export</span>
+      </button>
+      <div class="exp-menu" id="expMenu">
+        <div class="exp-item" onclick="exportAs('txt')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Plain Text
+        </div>
+        <div class="exp-item" onclick="exportAs('html')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          HTML
+        </div>
+        <div class="exp-item" onclick="exportAs('doc')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Word (.doc)
+        </div>
+        <div class="exp-item" onclick="exportAs('pdf')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h3a2 2 0 0 0 0-4H9v8"/></svg>
+          PDF
+        </div>
+      </div>
+    </div>
+
+    <button class="hbtn accent" onclick="saveDoc()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      <span>Save</span>
+    </button>
+  </div>
+</header>
+
+<!-- BODY -->
+<div class="app-body">
+
+  <!-- Overlay for mobile sidebar -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <button class="new-btn" onclick="openModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Document
+      </button>
+    </div>
+    <div class="sidebar-label">Documents</div>
+    <div class="doc-list" id="docList"></div>
+    <div class="sidebar-stats">
+      <div class="stat-grid">
+        <div class="stat-cell"><div class="stat-val" id="sb-w">0</div><div class="stat-lbl">Words</div></div>
+        <div class="stat-cell"><div class="stat-val" id="sb-c">0</div><div class="stat-lbl">Chars</div></div>
+        <div class="stat-cell"><div class="stat-val" id="sb-p">1</div><div class="stat-lbl">Pages</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOOLBAR -->
+    <div class="toolbar" id="toolbar">
+      <select class="font-sel" id="fontSel" onchange="applyFont()">
+        <option value="'Lora',serif">Lora</option>
+        <option value="'Inter',sans-serif">Inter</option>
+        <option value="'JetBrains Mono',monospace">Mono</option>
+        <option value="Georgia,serif">Georgia</option>
+        <option value="'Times New Roman',serif">Times</option>
+        <option value="Arial,sans-serif">Arial</option>
+        <option value="Verdana,sans-serif">Verdana</option>
+      </select>
+      <select class="size-sel" id="sizeSel" onchange="applySize()">
+        <option>10</option><option>12</option><option>13</option>
+        <option selected>16</option><option>18</option><option>20</option>
+        <option>24</option><option>28</option><option>32</option>
+        <option>36</option><option>48</option>
+      </select>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Bold" onclick="fmt('bold')"><b>B</b></button>
+      <button class="tb" data-tip="Italic" onclick="fmt('italic')"><i style="font-style:italic">I</i></button>
+      <button class="tb" data-tip="Underline" onclick="fmt('underline')"><u>U</u></button>
+      <button class="tb" data-tip="Strikethrough" onclick="fmt('strikeThrough')" style="font-size:13px"><s>S</s></button>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Heading 1" onclick="fmtBlock('h1')" style="font-size:11px;font-weight:700">H1</button>
+      <button class="tb" data-tip="Heading 2" onclick="fmtBlock('h2')" style="font-size:11px;font-weight:700">H2</button>
+      <button class="tb" data-tip="Heading 3" onclick="fmtBlock('h3')" style="font-size:11px;font-weight:700">H3</button>
+      <button class="tb" data-tip="Paragraph" onclick="fmtBlock('p')" style="font-size:12px">P</button>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Align Left" onclick="fmt('justifyLeft')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+      </button>
+      <button class="tb" data-tip="Center" onclick="fmt('justifyCenter')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
+      <button class="tb" data-tip="Align Right" onclick="fmt('justifyRight')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Bullet List" onclick="fmt('insertUnorderedList')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <button class="tb" data-tip="Numbered List" onclick="fmt('insertOrderedList')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><text x="1.5" y="8.5" font-size="6.5" fill="currentColor" stroke="none" font-family="monospace">1.</text><text x="1.5" y="14.5" font-size="6.5" fill="currentColor" stroke="none" font-family="monospace">2.</text><text x="1.5" y="20.5" font-size="6.5" fill="currentColor" stroke="none" font-family="monospace">3.</text></svg>
+      </button>
+      <button class="tb" data-tip="Blockquote" onclick="fmtBlock('blockquote')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+      </button>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Link" onclick="insertLink()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      </button>
+      <button class="tb" data-tip="Table" onclick="insertTable()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+      </button>
+      <button class="tb" data-tip="Divider" onclick="fmt('insertHorizontalRule')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+      </button>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Text Color" onclick="document.getElementById('tci').click()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="m6 16 6-12 6 12"/><path d="M8 12h8"/></svg>
+        <input type="color" id="tci" style="display:none" onchange="fmt('foreColor',this.value)">
+      </button>
+      <button class="tb" data-tip="Highlight" onclick="document.getElementById('hci').click()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        <input type="color" id="hci" value="#d4a853" style="display:none" onchange="fmt('hiliteColor',this.value)">
+      </button>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Undo" onclick="fmt('undo')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+      </button>
+      <button class="tb" data-tip="Redo" onclick="fmt('redo')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg>
+      </button>
+      <button class="tb" data-tip="Clear Formatting" onclick="fmt('removeFormat')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M5 20h6"/><path d="M13 4 8 20"/><line x1="17" y1="14" x2="22" y2="19"/><line x1="22" y1="14" x2="17" y2="19"/></svg>
+      </button>
+    </div>
+
+    <!-- FIND BAR -->
+    <div class="find-bar" id="findBar">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" style="flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="find-in" id="findIn" placeholder="Findâ€¦" oninput="doFind()">
+      <input class="find-in" id="replIn" placeholder="Replaceâ€¦" style="width:130px">
+      <span class="find-count" id="findCount"></span>
+      <button class="fbtn" onclick="doReplace()">Replace</button>
+      <button class="fbtn" onclick="doReplaceAll()">All</button>
+      <button class="find-close-btn" onclick="toggleFind()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- EDITOR -->
+    <div class="editor-wrap">
+      <div class="page">
+        <div
+          id="editor"
+          class="editor"
+          contenteditable="true"
+          data-ph=""
+          spellcheck="true"
+          oninput="onInput()"
+          onkeydown="onKey(event)"
+        ></div>
+      </div>
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="statusbar">
+      <div class="status-item">
+        <div class="status-dot" id="dot"></div>
+        <span id="statusTxt">Saved</span>
+      </div>
+      <span class="hide-mobile"><span id="sw">0</span> words</span>
+      <span class="hide-mobile"><span id="sc">0</span> chars</span>
+      <span>Page <span id="sp">1</span></span>
+      <span style="margin-left:auto" id="clock"></span>
+    </div>
+  </main>
+</div>
+
+<!-- NEW DOC MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">New Document</div>
+    <div class="modal-sub">Name your document and pick a format.</div>
+    <label class="modal-label">Name</label>
+    <input class="modal-input" id="newName"
+      onkeydown="if(event.key==='Enter')createDoc();if(event.key==='Escape')closeModal()">
+    <label class="modal-label">Format</label>
+    <div class="fmt-grid">
+      <div class="fmt-card sel" data-fmt="docx" onclick="pickFmt(this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <div class="fl">DOCX</div>
+      </div>
+      <div class="fmt-card" data-fmt="doc" onclick="pickFmt(this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <div class="fl">DOC</div>
+      </div>
+      <div class="fmt-card" data-fmt="pdf" onclick="pickFmt(this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h3a2 2 0 0 0 0-4H9v8"/></svg>
+        <div class="fl">PDF</div>
+      </div>
+      <div class="fmt-card" data-fmt="txt" onclick="pickFmt(this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        <div class="fl">TXT</div>
+      </div>
+    </div>
+    <div class="modal-row">
+      <button class="mbtn ghost" onclick="closeModal()">Cancel</button>
+      <button class="mbtn solid" onclick="createDoc()">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+// â”€â”€ SVGs â”€â”€
+const ICON_FILE = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`;
+const ICON_TRASH = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>`;
+
+// â”€â”€ STATE â”€â”€
+let docs = JSON.parse(localStorage.getItem('writa_v3') || '[]');
+let activeId = null;
+let unsaved  = false;
+let fmtVal   = 'docx';
+
+
+let deferredInstallPrompt = null;
+let isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+if (!docs.length) {
+  // Start fresh â€” open modal to create first doc, or load empty
+  const d = { id: uid(), name: 'Untitled Document', fmt: 'docx', content: '', updated: Date.now() };
+  docs = [d];
+  persist();
+}
+
+loadDoc(docs[0].id);
+renderList();
+tick();
+setInterval(tick, 30000);
+setInterval(() => { if (unsaved) saveDoc(); }, 5000);
+
+// â”€â”€ CORE â”€â”€
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function persist() { localStorage.setItem('writa_v3', JSON.stringify(docs)); }
+
+function renderList() {
+  document.getElementById('docList').innerHTML = docs.map(d => `
+    <div class="doc-item${d.id===activeId?' active':''}" onclick="switchDoc('${d.id}')">
+      <div class="doc-icon">${ICON_FILE}</div>
+      <div class="doc-info">
+        <div class="doc-name">${esc(d.name)}</div>
+        <div class="doc-meta">${d.fmt.toUpperCase()} Â· ${relTime(d.updated)}</div>
+      </div>
+      <button class="doc-del" onclick="event.stopPropagation();delDoc('${d.id}')" title="Delete">${ICON_TRASH}</button>
+    </div>
+  `).join('');
+}
+
+function switchDoc(id) {
+  if (activeId) {
+    const d = docs.find(x=>x.id===activeId);
+    if (d) d.content = document.getElementById('editor').innerHTML;
+    persist();
+  }
+  closeSidebar();
+  loadDoc(id);
+}
+
+function loadDoc(id) {
+  activeId = id;
+  const d = docs.find(x=>x.id===id);
+  if (!d) return;
+  document.getElementById('editor').innerHTML = d.content || '';
+  document.getElementById('docTitle').textContent = d.name;
+  unsaved = false;
+  setStatus(false);
+  counts();
+  renderList();
+}
+
+function saveDoc() {
+  const d = docs.find(x=>x.id===activeId);
+  if (!d) return;
+  d.content = document.getElementById('editor').innerHTML;
+  d.updated  = Date.now();
+  persist();
+  unsaved = false;
+  setStatus(false);
+  renderList();
+  showToast('Saved');
+}
+
+function delDoc(id) {
+  if (docs.length === 1) { showToast('Cannot delete last document'); return; }
+  docs = docs.filter(d=>d.id!==id);
+  persist();
+  if (activeId === id) loadDoc(docs[0].id);
+  else renderList();
+}
+
+// â”€â”€ SIDEBAR MOBILE â”€â”€
+function toggleSidebar() {
+  const s = document.getElementById('sidebar');
+  const o = document.getElementById('sidebarOverlay');
+  const open = s.classList.toggle('open');
+  open ? o.classList.add('open') : o.classList.remove('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// â”€â”€ MODAL â”€â”€
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  setTimeout(()=>document.getElementById('newName').focus(),60);
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function pickFmt(el) {
+  document.querySelectorAll('.fmt-card').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  fmtVal = el.dataset.fmt;
+}
+function createDoc() {
+  const name = document.getElementById('newName').value.trim() || 'Untitled Document';
+  const d = { id: uid(), name, fmt: fmtVal, content: '', updated: Date.now() };
+  docs.unshift(d);
+  persist();
+  closeModal();
+  loadDoc(d.id);
+  showToast(`"${name}" created`);
+}
+
+// â”€â”€ EDITOR â”€â”€
+function fmt(cmd, val=null) {
+  document.getElementById('editor').focus();
+  document.execCommand(cmd, false, val);
+}
+function fmtBlock(tag) {
+  document.getElementById('editor').focus();
+  document.execCommand('formatBlock', false, tag);
+}
+function applyFont() { fmt('fontName', document.getElementById('fontSel').value); }
+function applySize() {
+  document.getElementById('editor').focus();
+  const sz = document.getElementById('sizeSel').value;
+  document.execCommand('fontSize', false, 7);
+  document.querySelectorAll('#editor font[size="7"]').forEach(f => {
+    f.removeAttribute('size'); f.style.fontSize = sz + 'px';
+  });
+}
+function insertLink() {
+  const url = prompt('Enter URL:', 'https://');
+  if (url) fmt('createLink', url);
+}
+function insertTable() {
+  const r = parseInt(prompt('Rows:', '3'))||3;
+  const c = parseInt(prompt('Columns:', '3'))||3;
+  let html = '<table style="border-collapse:collapse;width:100%;margin:14px 0;font-size:14px">';
+  for (let i=0;i<r;i++) {
+    html += '<tr>';
+    for (let j=0;j<c;j++) {
+      if (i===0) html += `<th style="border:1px solid #2f2f2f;padding:8px 12px;background:#232323;font-family:Inter,sans-serif;font-size:12px;font-weight:600;text-align:left">Header ${j+1}</th>`;
+      else html += `<td style="border:1px solid #2f2f2f;padding:8px 12px">Cell</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</table>';
+  fmt('insertHTML', html);
+}
+
+function onInput() { unsaved = true; setStatus(true); counts(); }
+function onKey(e) {
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveDoc(); }
+  if ((e.ctrlKey||e.metaKey) && e.key==='f') { e.preventDefault(); toggleFind(); }
+  if (e.key==='Tab') { e.preventDefault(); fmt('insertText','    '); }
+}
+
+function setStatus(dirty) {
+  document.getElementById('dot').className = 'status-dot' + (dirty ? ' unsaved' : '');
+  document.getElementById('statusTxt').textContent = dirty ? 'Unsaved' : 'Saved';
+}
+
+function counts() {
+  const t = document.getElementById('editor').innerText || '';
+  const w = t.trim() ? t.trim().split(/\s+/).length : 0;
+  const c = t.length;
+  document.getElementById('sw').textContent  = w;
+  document.getElementById('sc').textContent  = c;
+  document.getElementById('sp').textContent  = Math.ceil(w/300)||1;
+  document.getElementById('sb-w').textContent = w;
+  document.getElementById('sb-c').textContent = c;
+  document.getElementById('sb-p').textContent = Math.ceil(w/300)||1;
+}
+
+// â”€â”€ FIND â”€â”€
+function toggleFind() {
+  const fb = document.getElementById('findBar');
+  fb.classList.toggle('open');
+  if (fb.classList.contains('open')) document.getElementById('findIn').focus();
+  else clearMarks();
+}
+function doFind() {
+  clearMarks();
+  const term = document.getElementById('findIn').value;
+  if (!term) { document.getElementById('findCount').textContent=''; return; }
+  const ed = document.getElementById('editor');
+  let n = 0;
+  ed.innerHTML = ed.innerHTML.replace(/>[^<]*/g, m =>
+    m.replace(new RegExp(escRe(term),'gi'), s => { n++; return `<mark style="background:rgba(212,168,83,0.25);border-radius:2px">${s}</mark>`; })
+  );
+  document.getElementById('findCount').textContent = n ? `${n} found` : 'Not found';
+}
+function clearMarks() {
+  const ed = document.getElementById('editor');
+  ed.innerHTML = ed.innerHTML.replace(/<mark[^>]*>(.*?)<\/mark>/gi,'$1');
+}
+function doReplace() {
+  const f=document.getElementById('findIn').value, r=document.getElementById('replIn').value;
+  if (!f) return;
+  clearMarks();
+  const ed = document.getElementById('editor');
+  ed.innerHTML = ed.innerHTML.replace(new RegExp(escRe(f),'i'), r);
+  doFind();
+}
+function doReplaceAll() {
+  const f=document.getElementById('findIn').value, r=document.getElementById('replIn').value;
+  if (!f) return;
+  clearMarks();
+  const ed = document.getElementById('editor');
+  const n = (ed.innerHTML.match(new RegExp(escRe(f),'gi'))||[]).length;
+  ed.innerHTML = ed.innerHTML.replace(new RegExp(escRe(f),'gi'), r);
+  showToast(`Replaced ${n} instance${n===1?'':'s'}`);
+}
+
+// â”€â”€ EXPORT â”€â”€
+function toggleExport() { document.getElementById('expMenu').classList.toggle('open'); }
+document.addEventListener('click', e => {
+  if (!e.target.closest('.export-wrap')) document.getElementById('expMenu').classList.remove('open');
+});
+function exportAs(type) {
+  document.getElementById('expMenu').classList.remove('open');
+  const d = docs.find(x=>x.id===activeId);
+  if (!d) return;
+  const html = document.getElementById('editor').innerHTML;
+  const text = document.getElementById('editor').innerText;
+  if (type==='txt') {
+    dl(d.name+'.txt', text, 'text/plain');
+  } else if (type==='html') {
+    const page = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${d.name}</title><style>body{font-family:Georgia,serif;max-width:720px;margin:48px auto;padding:0 24px;line-height:1.8;color:#222;font-size:16px}h1{font-size:32px;margin-bottom:16px}h2{font-size:24px;margin:28px 0 12px}h3{font-size:18px;margin:20px 0 8px}blockquote{border-left:2px solid #d4a853;padding-left:18px;color:#666;font-style:italic;margin:18px 0}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid #ddd;padding:8px 12px}th{background:#f5f5f5;font-weight:600}</style></head><body>${html}</body></html>`;
+    dl(d.name+'.html', page, 'text/html');
+  } else if (type==='doc') {
+    const word = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><title>${d.name}</title><style>body{font-family:Calibri,sans-serif;line-height:1.6;font-size:11pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:6px 10px}</style></head><body>${html}</body></html>`;
+    dl(d.name+'.doc', word, 'application/msword');
+  } else if (type==='pdf') {
+    const pw = window.open('','_blank');
+    pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${d.name}</title><style>@page{margin:2.2cm}body{font-family:Georgia,serif;line-height:1.8;color:#111;font-size:12pt}h1{font-size:26pt;margin-bottom:14px}h2{font-size:18pt;margin:24px 0 10px}h3{font-size:13pt;margin:18px 0 8px}blockquote{border-left:2px solid #aaa;padding-left:16px;color:#555;font-style:italic;margin:16px 0}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:7px 11px}th{background:#f0f0f0}</style></head><body>${html}</body></html>`);
+    pw.document.close();
+    pw.onload = () => { pw.focus(); pw.print(); };
+    showToast('Print dialog opened');
+    return;
+  }
+  showToast(`Exported as ${type.toUpperCase()}`);
+}
+function dl(name, content, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content],{type}));
+  a.download = name;
+  a.click();
+}
+
+// â”€â”€ UTILS â”€â”€
+function showToast(msg) {
+  document.getElementById('toastMsg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function relTime(ts) {
+  const s = Math.floor((Date.now()-ts)/1000);
+  if (s<60) return 'now';
+  if (s<3600) return Math.floor(s/60)+'m ago';
+  if (s<86400) return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+function updateInstallButton() {
+  const btn = document.getElementById('installBtn');
+  if (!btn) return;
+  btn.style.display = (deferredInstallPrompt && !isInstalled) ? 'flex' : 'none';
+}
+
+async function installApp() {
+  if (!deferredInstallPrompt) {
+    showToast('Install option not ready yet');
+    return;
+  }
+
+  deferredInstallPrompt.prompt();
+  const choice = await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  updateInstallButton();
+
+  if (choice && choice.outcome === 'accepted') {
+    showToast('Installing app...');
+  }
+}
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  updateInstallButton();
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  isInstalled = true;
+  updateInstallButton();
+  showToast('App installed');
+});
+function tick() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+counts();
+updateInstallButton();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch((err) => {
+      console.error('Service worker registration failed:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+
