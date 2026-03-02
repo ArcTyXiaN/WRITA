@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'writa-v2';
+const CACHE_NAME = 'writa-v3';
 const OFFLINE_URL = './index.html';
 const ASSETS = [
   './',
@@ -27,15 +27,34 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  const isHttp = request.url.startsWith('http://') || request.url.startsWith('https://');
+
+  // Ignore non-HTTP(S) requests (for example, browser-extension URLs).
+  if (!isHttp || request.method !== 'GET') {
+    return;
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match(OFFLINE_URL))
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => {});
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match(OFFLINE_URL)))
     );
     return;
   }
 
   event.respondWith(
-    caches.match(request).then((cached) => cached || fetch(request))
+    caches.match(request).then((cached) => {
+      if (cached) return cached;
+      return fetch(request).then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)).catch(() => {});
+        return response;
+      });
+    })
   );
 });

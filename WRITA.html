@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,6 +6,7 @@
 <title>Writa</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#d4a853">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -32,7 +33,7 @@
   --status-h:  26px;
   --page-h: 1122px;
   --page-pad-y: 56px;
-  --page-pad-x: 64px;
+  --page-pad-x: 56px;
 }
 
 [data-theme="light"] {
@@ -61,12 +62,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* â”€â”€ SCROLLBARS â”€â”€ */
+/* ── SCROLLBARS ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
-/* â”€â”€ HEADER â”€â”€ */
+/* ── HEADER ── */
 .header {
   height: var(--header-h);
   background: var(--surface);
@@ -122,6 +123,7 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
 }
 
 .hbtn {
@@ -162,7 +164,7 @@ body {
 .icon-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border2); }
 #mobileNewBtn { display: none; }
 
-/* â”€â”€ BODY â”€â”€ */
+/* ── BODY ── */
 .app-body {
   flex: 1;
   display: flex;
@@ -170,7 +172,7 @@ body {
   position: relative;
 }
 
-/* â”€â”€ SIDEBAR â”€â”€ */
+/* ── SIDEBAR ── */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--surface);
@@ -306,7 +308,7 @@ body {
 .stat-val { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1; }
 .stat-lbl { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
 
-/* â”€â”€ OVERLAY (mobile) â”€â”€ */
+/* ── OVERLAY (mobile) ── */
 .sidebar-overlay {
   display: none;
   position: fixed;
@@ -315,7 +317,7 @@ body {
   z-index: 39;
 }
 
-/* â”€â”€ MAIN â”€â”€ */
+/* ── MAIN ── */
 .main {
   flex: 1;
   display: flex;
@@ -324,7 +326,7 @@ body {
   min-width: 0;
 }
 
-/* â”€â”€ TOOLBAR â”€â”€ */
+/* ── TOOLBAR ── */
 .toolbar {
   height: var(--toolbar-h);
   background: var(--surface);
@@ -394,7 +396,7 @@ body {
 .size-sel { width: 52px; }
 .font-sel:focus, .size-sel:focus { border-color: var(--accent); }
 
-/* â”€â”€ FIND BAR â”€â”€ */
+/* ── FIND BAR ── */
 .find-bar {
   display: none;
   align-items: center;
@@ -448,7 +450,7 @@ body {
 }
 .find-close-btn:hover { color: var(--text); }
 
-/* â”€â”€ EDITOR AREA â”€â”€ */
+/* ── EDITOR AREA ── */
 .editor-wrap {
   flex: 1;
   overflow-y: auto;
@@ -458,7 +460,7 @@ body {
 
 .pages {
   width: 100%;
-  max-width: 720px;
+  max-width: 900px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -514,7 +516,7 @@ body {
 .editor th { background: var(--surface2); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
 .editor td, .editor th { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
 
-/* â”€â”€ STATUS BAR â”€â”€ */
+/* ── STATUS BAR ── */
 .statusbar {
   height: var(--status-h);
   background: var(--surface);
@@ -532,7 +534,7 @@ body {
 .status-dot.unsaved { background: var(--accent); }
 .status-item { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 
-/* â”€â”€ MODAL â”€â”€ */
+/* ── MODAL ── */
 .modal-overlay {
   display: none;
   position: fixed; inset: 0;
@@ -605,7 +607,7 @@ body {
 .mbtn.solid { background: var(--accent); border-color: var(--accent); color: #111; font-weight: 600; }
 .mbtn.solid:hover { background: #c89940; }
 
-/* â”€â”€ EXPORT MENU â”€â”€ */
+/* ── EXPORT MENU ── */
 .export-wrap { position: relative; }
 .exp-menu {
   position: absolute;
@@ -632,7 +634,7 @@ body {
 }
 .exp-item:hover { background: var(--surface2); color: var(--text); }
 
-/* â”€â”€ TOAST â”€â”€ */
+/* ── TOAST ── */
 .toast {
   position: fixed;
   bottom: 40px; right: 18px;
@@ -653,15 +655,17 @@ body {
 }
 .toast.show { opacity: 1; transform: translateY(0); }
 
-/* â”€â”€ SELECTION â”€â”€ */
+/* ── SELECTION ── */
 ::selection { background: rgba(212,168,83,0.18); }
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+/* ═══════════════════════════
    RESPONSIVE
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+═══════════════════════════ */
 @media (max-width: 768px) {
   :root { --header-h: 52px; }
   :root { --page-pad-y: 32px; --page-pad-x: 22px; }
+  .header { padding: 0 8px; gap: 6px; }
+  .logo { font-size: 12px; letter-spacing: 2px; flex-shrink: 0; }
 
   .menu-toggle { display: flex; }
   #mobileNewBtn { display: flex; }
@@ -676,30 +680,56 @@ body {
   .sidebar-overlay.open { display: block; }
 
   .doc-title { display: none; }
+  .header-actions {
+    margin-left: auto;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: calc(100vw - 120px);
+    padding-bottom: 1px;
+  }
+  .header-actions::-webkit-scrollbar { display: none; }
+  .icon-btn, .hbtn { width: 30px; height: 30px; }
 
   .hbtn span { display: none; }
-  .hbtn { width: 32px; height: 32px; padding: 0; justify-content: center; }
+  .hbtn { padding: 0; justify-content: center; }
   .hbtn svg { flex-shrink: 0; }
 
   .editor { font-size: 15px; }
 
-  .find-bar { gap: 5px; }
-  .find-in { width: 130px; }
+  .find-bar { gap: 5px; padding: 6px 8px; }
+  .find-in { width: auto; min-width: 0; flex: 1 1 120px; }
+  #replIn { width: auto !important; }
 
   .toolbar { padding: 0 4px; }
 
   .doc-title-wrap { flex: 0; }
 
-  .statusbar { gap: 10px; }
+  .statusbar {
+    gap: 10px;
+    height: auto;
+    min-height: var(--status-h);
+    padding: 4px 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .statusbar::-webkit-scrollbar { display: none; }
   .statusbar .hide-mobile { display: none; }
 }
 
 @media (max-width: 480px) {
   :root { --page-pad-y: 24px; --page-pad-x: 14px; }
+  .header { padding: 0 6px; }
+  .logo { font-size: 11px; letter-spacing: 1.6px; }
+  .header-actions { max-width: calc(100vw - 96px); }
   .editor-wrap { padding: 16px 8px 40px; }
   .editor { font-size: 15px; line-height: 1.75; }
-  .find-in { width: 110px; }
-  .logo span { font-size: 13px; }
+  .find-bar { gap: 4px; }
+  .find-in { flex: 1 1 100px; }
+  #replIn { flex-basis: 96px; }
+  .fbtn { padding: 0 8px; }
+  .statusbar #clock { display: none; }
+  .logo span { font-size: 11px; }
 }
 </style>
 </head>
@@ -881,8 +911,8 @@ body {
     <!-- FIND BAR -->
     <div class="find-bar" id="findBar">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" style="flex-shrink:0"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="find-in" id="findIn" placeholder="Findâ€¦" oninput="doFind()">
-      <input class="find-in" id="replIn" placeholder="Replaceâ€¦" style="width:130px">
+      <input class="find-in" id="findIn" placeholder="Find…" oninput="doFind()">
+      <input class="find-in" id="replIn" placeholder="Replace…" style="width:130px">
       <span class="find-count" id="findCount"></span>
       <button class="fbtn" onclick="doReplace()">Replace</button>
       <button class="fbtn" onclick="doReplaceAll()">All</button>
@@ -960,13 +990,13 @@ body {
 </div>
 
 <script>
-// â”€â”€ SVGs â”€â”€
+// ── SVGs ──
 const ICON_FILE = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`;
 const ICON_TRASH = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>`;
 const ICON_SUN = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>`;
 const ICON_MOON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>`;
 
-// â”€â”€ STATE â”€â”€
+// ── STATE ──
 let docs = JSON.parse(localStorage.getItem('writa_v3') || '[]');
 let activeId = null;
 let unsaved  = false;
@@ -992,7 +1022,7 @@ tick();
 setInterval(tick, 30000);
 setInterval(() => { if (unsaved) saveDoc(); }, 5000);
 
-// â”€â”€ CORE â”€â”€
+// ── CORE ──
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function persist() { localStorage.setItem('writa_v3', JSON.stringify(docs)); }
 
@@ -1002,7 +1032,7 @@ function renderList() {
       <div class="doc-icon">${ICON_FILE}</div>
       <div class="doc-info">
         <div class="doc-name">${esc(d.name)}</div>
-        <div class="doc-meta">${d.fmt.toUpperCase()} Â· ${relTime(d.updated)}</div>
+        <div class="doc-meta">${d.fmt.toUpperCase()} · ${relTime(d.updated)}</div>
       </div>
       <button class="doc-del" onclick="event.stopPropagation();delDoc('${d.id}')" title="Delete">${ICON_TRASH}</button>
     </div>
@@ -1052,7 +1082,7 @@ function delDoc(id) {
   else renderList();
 }
 
-// â”€â”€ SIDEBAR MOBILE â”€â”€
+// ── SIDEBAR MOBILE ──
 function toggleSidebar() {
   const s = document.getElementById('sidebar');
   const o = document.getElementById('sidebarOverlay');
@@ -1064,7 +1094,7 @@ function closeSidebar() {
   document.getElementById('sidebarOverlay').classList.remove('open');
 }
 
-// â”€â”€ MODAL â”€â”€
+// ── MODAL ──
 function openModal() {
   document.getElementById('modal').classList.add('open');
   setTimeout(()=>document.getElementById('newName').focus(),60);
@@ -1142,7 +1172,7 @@ function textToHtml(text) {
   return normalized.split('\n').map(line => line ? `<p>${esc(line)}</p>` : '<p><br></p>').join('');
 }
 
-// â”€â”€ EDITOR â”€â”€
+// ── EDITOR ──
 function fmt(cmd, val=null) {
   focusActiveEditor();
   document.execCommand(cmd, false, val);
@@ -1361,7 +1391,7 @@ function counts() {
   updatePageIndicator();
 }
 
-// â”€â”€ FIND â”€â”€
+// ── FIND ──
 function toggleFind() {
   const fb = document.getElementById('findBar');
   fb.classList.toggle('open');
@@ -1415,7 +1445,7 @@ function doReplaceAll() {
   showToast(`Replaced ${n} instance${n===1?'':'s'}`);
 }
 
-// â”€â”€ EXPORT â”€â”€
+// ── EXPORT ──
 function toggleExport() { document.getElementById('expMenu').classList.toggle('open'); }
 document.addEventListener('click', e => {
   if (!e.target.closest('.export-wrap')) document.getElementById('expMenu').classList.remove('open');
@@ -1528,7 +1558,7 @@ function dl(name, content, type) {
   a.click();
 }
 
-// â”€â”€ THEME â”€â”€
+// ── THEME ──
 function loadTheme() {
   return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark';
 }
@@ -1548,7 +1578,7 @@ function toggleTheme() {
   applyTheme(loadTheme() === 'light' ? 'dark' : 'light');
 }
 
-// â”€â”€ UTILS â”€â”€
+// ── UTILS ──
 function showToast(msg) {
   document.getElementById('toastMsg').textContent = msg;
   const t = document.getElementById('toast');
@@ -1609,14 +1639,17 @@ updateInstallButton();
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch((err) => {
-      console.error('Service worker registration failed:', err);
-    });
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+      .then((reg) => reg.update())
+      .catch((err) => {
+        console.error('Service worker registration failed:', err);
+      });
   });
 }
 </script>
 </body>
 </html>
+
 
 
 
