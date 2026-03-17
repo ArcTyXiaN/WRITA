@@ -4,7 +4,7 @@ WRITA is a lightweight, offline-capable writing app.
 
 ## Highlights (v2, March 17, 2026)
 
-- Single-file app: `WRITA.html` is the source of truth (no `index.html`).
+- `index.html` and `WRITA.html` are identical and both serve the app.
 - DOCX import with image preservation (embedded images render inline).
 - DOCX export added via HTML-to-DOCX conversion.
 - Image insert button added to the toolbar.
@@ -16,10 +16,12 @@ WRITA is a lightweight, offline-capable writing app.
 - HTML/PDF/DOC import removed.
 - Import no longer injects extra helper text into documents.
 - Service worker now force-refreshes clients on update for immediate cache busting.
+- Desktop sidebar can be toggled with the menu icon and fully collapses.
+- Mobile layout tweaks for easier taps and visibility.
 
 ## Deploy Notes
 
-- Serve `WRITA.html` as the main page.
+- Serve `index.html` as the main page (GitHub Pages default).
 - Upload the updated `sw.js`.
 - On update, clients will be auto-navigated to the latest version.
 
@@ -29,4 +31,4 @@ WRITA is a lightweight, offline-capable writing app.
 python -m http.server 5500
 ```
 
-Open `http://localhost:5500/WRITA.html`.
+Open `http://localhost:5500/index.html` (or `WRITA.html`).
