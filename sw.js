@@ -1,7 +1,8 @@
-const CACHE_NAME = 'writa-v6';
-const OFFLINE_URL = './WRITA.html';
+const CACHE_NAME = 'writa-v8';
+const OFFLINE_URL = './index.html';
 const ASSETS = [
   './',
+  './index.html',
   './WRITA.html',
   './manifest.json',
   './icon-192.png',
