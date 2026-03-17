@@ -96,6 +96,10 @@ body {
 
 .sidebar-collapsed .sidebar {
   transform: translateX(calc(-1 * var(--sidebar-w)));
+  width: 0;
+  min-width: 0;
+  border-right: none;
+  overflow: hidden;
 }
 .sidebar-collapsed .sidebar-overlay { display: none; }
 .sidebar-collapsed .main { margin-left: 0; }
