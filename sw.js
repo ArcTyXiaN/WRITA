@@ -1,8 +1,7 @@
-const CACHE_NAME = 'writa-v3';
-const OFFLINE_URL = './index.html';
+const CACHE_NAME = 'writa-v6';
+const OFFLINE_URL = './WRITA.html';
 const ASSETS = [
   './',
-  './index.html',
   './WRITA.html',
   './manifest.json',
   './icon-192.png',
@@ -18,11 +17,17 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
-    )
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then((clients) => {
+        clients.forEach((client) => {
+          if (client.url) client.navigate(client.url);
+        });
+      })
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {

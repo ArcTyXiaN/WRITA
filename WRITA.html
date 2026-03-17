@@ -162,6 +162,8 @@ body {
   flex-shrink: 0;
 }
 .icon-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border2); }
+.import-btn { border-color: var(--accent); color: var(--accent); }
+.import-btn:hover { border-color: var(--accent); }
 #mobileNewBtn { display: none; }
 
 /* ── BODY ── */
@@ -337,13 +339,17 @@ body {
   gap: 1px;
   flex-shrink: 0;
   overflow-x: auto;
+  overflow-y: visible;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 .toolbar::-webkit-scrollbar { display: none; }
+.toolbar > * { flex-shrink: 0; }
 
 .tsep { width: 1px; height: 18px; background: var(--border2); margin: 0 4px; flex-shrink: 0; }
 
 .tb {
-  width: 30px; height: 30px;
+  width: 34px; height: 34px;
   background: none;
   border: none;
   border-radius: 5px;
@@ -356,11 +362,14 @@ body {
   transition: all 0.12s;
   position: relative;
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
+.tb svg { width: 16px; height: 16px; }
 .tb:hover { background: var(--surface3); color: var(--text); }
-.tb[data-tip]:hover::after {
+.tb[data-tip]:hover::after,
+.tb[data-tip]:focus::after,
+.tb[data-tip]:active::after {
   content: attr(data-tip);
   position: absolute;
   bottom: -28px; left: 50%;
@@ -377,6 +386,24 @@ body {
   pointer-events: none;
   z-index: 200;
 }
+.tb.tip-show::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: -28px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 200;
+}
+.tb:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .font-sel, .size-sel {
   height: 28px;
@@ -515,6 +542,15 @@ body {
 .editor table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14px; }
 .editor th { background: var(--surface2); font-family: 'Inter', sans-serif; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
 .editor td, .editor th { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+.editor .img-wrap {
+  display: inline-block;
+  max-width: 100%;
+  resize: both;
+  overflow: auto;
+  border: 1px dashed transparent;
+}
+.editor .img-wrap:focus { outline: none; border-color: var(--accent); }
+.editor .img-wrap img { display: block; width: 100%; height: auto; pointer-events: none; }
 
 /* ── STATUS BAR ── */
 .statusbar {
@@ -533,6 +569,22 @@ body {
 .status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
 .status-dot.unsaved { background: var(--accent); }
 .status-item { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.add-page-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 18px;
+}
+.add-page-btn {
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px dashed var(--border2);
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+.add-page-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border); }
 
 /* ── MODAL ── */
 .modal-overlay {
@@ -674,7 +726,7 @@ body {
     position: fixed;
     top: 0; left: 0; bottom: 0;
     transform: translateX(-100%);
-    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+    box-shadow: none;
   }
   .sidebar.open { transform: translateX(0); }
   .sidebar-overlay.open { display: block; }
@@ -702,6 +754,8 @@ body {
   #replIn { width: auto !important; }
 
   .toolbar { padding: 0 4px; }
+  .tb { width: 36px; height: 36px; }
+  .tb svg { width: 17px; height: 17px; }
 
   .doc-title-wrap { flex: 0; }
 
@@ -754,9 +808,6 @@ body {
     <button class="icon-btn" onclick="toggleFind()" title="Find & Replace">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
-    <label class="icon-btn" for="fileImportInput" title="Import File" style="margin:0">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-    </label>
     <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
     </button>
@@ -783,9 +834,9 @@ body {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           HTML
         </div>
-        <div class="exp-item" onclick="exportAs('doc')">
+        <div class="exp-item" onclick="exportAs('docx')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Word (.doc)
+          Word (.docx)
         </div>
         <div class="exp-item" onclick="exportAs('pdf')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h3a2 2 0 0 0 0-4H9v8"/></svg>
@@ -799,7 +850,8 @@ body {
       <span>Save</span>
     </button>
   </div>
-  <input id="fileImportInput" type="file" accept=".txt,.md,.html,.htm,.csv,.json,.log,.pdf,.doc,.docx" multiple style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+  <input id="fileImportInput" type="file" accept=".txt,.md,.csv,.json,.log,.docx" multiple style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+  <input id="imageImportInput" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 </header>
 
 <!-- BODY -->
@@ -814,6 +866,10 @@ body {
       <button class="new-btn" onclick="openModal()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New Document
+      </button>
+      <button class="new-btn" onclick="openImportPicker()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        Import File
       </button>
     </div>
     <div class="sidebar-label">Documents</div>
@@ -857,6 +913,10 @@ body {
       <button class="tb" data-tip="Heading 2" onclick="fmtBlock('h2')" style="font-size:11px;font-weight:700">H2</button>
       <button class="tb" data-tip="Heading 3" onclick="fmtBlock('h3')" style="font-size:11px;font-weight:700">H3</button>
       <button class="tb" data-tip="Paragraph" onclick="fmtBlock('p')" style="font-size:12px">P</button>
+      <div class="tsep"></div>
+      <button class="tb" data-tip="Insert Image" onclick="openImagePicker()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-4 4-3-3-5 5"/></svg>
+      </button>
       <div class="tsep"></div>
       <button class="tb" data-tip="Align Left" onclick="fmt('justifyLeft')">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
@@ -933,6 +993,9 @@ body {
           ></div>
         </div>
       </div>
+      <div class="add-page-wrap">
+        <button class="add-page-btn" onclick="addPage()" type="button">Add Page</button>
+      </div>
     </div>
 
     <!-- STATUS BAR -->
@@ -944,7 +1007,7 @@ body {
       <span class="hide-mobile"><span id="sw">0</span> words</span>
       <span class="hide-mobile"><span id="sc">0</span> chars</span>
       <span>Page <span id="sp">1</span></span>
-      <span style="margin-left:auto" id="clock"></span>
+      <span id="clock"></span>
     </div>
   </main>
 </div>
@@ -989,6 +1052,9 @@ body {
   <span id="toastMsg"></span>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script>
 // ── SVGs ──
 const ICON_FILE = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`;
@@ -1014,7 +1080,13 @@ if (!docs.length) {
   persist();
 }
 
-document.getElementById('fileImportInput').addEventListener('change', importFiles);
+const fileImportInput = document.getElementById('fileImportInput');
+if (fileImportInput) fileImportInput.addEventListener('change', importFiles);
+const imageImportInput = document.getElementById('imageImportInput');
+if (imageImportInput) imageImportInput.addEventListener('change', importImageFile);
+document.querySelectorAll('.tb[data-tip]').forEach(btn => {
+  if (!btn.hasAttribute('title')) btn.setAttribute('title', btn.getAttribute('data-tip'));
+});
 applyTheme(loadTheme());
 loadDoc(docs[0].id);
 renderList();
@@ -1116,13 +1188,37 @@ function createDoc() {
 }
 
 function openImportPicker() {
-  document.getElementById('fileImportInput').click();
+  const input = document.getElementById('fileImportInput');
+  if (input) input.click();
+}
+function openImagePicker() {
+  const input = document.getElementById('imageImportInput');
+  if (input) input.click();
 }
 
 function importFiles(event) {
   const files = Array.from(event.target.files || []);
   if (!files.length) return;
   files.forEach(importFile);
+  event.target.value = '';
+}
+function importImageFile(event) {
+  const file = (event.target.files || [])[0];
+  if (!file) return;
+  if (!/^image\//i.test(file.type)) {
+    showToast('Not an image file');
+    event.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    focusActiveEditor();
+    const html = `<span class="img-wrap" contenteditable="false"><img src="${reader.result}" alt=""></span><span>\u200b</span>`;
+    document.execCommand('insertHTML', false, html);
+    reflowAll();
+    counts();
+  };
+  reader.readAsDataURL(file);
   event.target.value = '';
 }
 
@@ -1134,18 +1230,59 @@ function importFile(file) {
     reader.readAsText(file);
     return;
   }
-  if (['html', 'htm'].includes(ext)) {
-    const reader = new FileReader();
-    reader.onload = () => createImportedDoc(stripExt(file.name), 'html', sanitizeImportedHtml(reader.result || ''));
-    reader.readAsText(file);
+
+  if (ext === 'docx') {
+    importDocxAsEditable(file);
     return;
   }
 
-  const url = URL.createObjectURL(file);
-  window.open(url, '_blank', 'noopener');
-  const hint = `<p><strong>${esc(file.name)}</strong> was opened in a new tab for viewing.</p><p>Editable import supports <code>.txt</code>, <code>.md</code>, and <code>.html</code>.</p>`;
-  createImportedDoc(stripExt(file.name), ext || 'doc', hint);
+  createImportedDoc(stripExt(file.name), ext || 'doc', '');
 }
+
+function importDocxAsEditable(file, arrayBuffer) {
+  if (!window.mammoth || !mammoth.convertToHtml) {
+    const url = URL.createObjectURL(file);
+    const hint = `<p><strong>${esc(file.name)}</strong> couldn't be converted because the DOCX converter failed to load.</p>
+      <p><a href="${url}" target="_blank" rel="noopener">Open file</a> or <a href="${url}" download="${esc(file.name)}">download</a>.</p>`;
+    createImportedDoc(stripExt(file.name), 'docx', hint);
+    return;
+  }
+  const convert = async (buffer) => {
+    try {
+      const result = await mammoth.convertToHtml(
+        { arrayBuffer: buffer },
+        {
+          convertImage: mammoth.images.inline((image) =>
+            image.read('base64').then((data) => ({
+              src: `data:${image.contentType};base64,${data}`
+            }))
+          )
+        }
+      );
+      const html = result && result.value ? result.value : '';
+      createImportedDoc(stripExt(file.name), 'docx', html || '');
+      showToast('DOCX converted');
+    } catch (err) {
+      const url = URL.createObjectURL(file);
+      const hint = `<p><strong>${esc(file.name)}</strong> couldn't be converted.</p>
+        <p><a href="${url}" target="_blank" rel="noopener">Open file</a> or <a href="${url}" download="${esc(file.name)}">download</a>.</p>`;
+      createImportedDoc(stripExt(file.name), 'docx', hint);
+      showToast('DOCX conversion failed');
+    }
+  };
+
+  if (arrayBuffer) {
+    showToast('Converting DOCX...');
+    convert(arrayBuffer);
+    return;
+  }
+
+  showToast('Converting DOCX...');
+  const reader = new FileReader();
+  reader.onload = () => convert(reader.result);
+  reader.readAsArrayBuffer(file);
+}
+
 
 function createImportedDoc(name, fmt, content) {
   const d = { id: uid(), name: name || 'Imported Document', fmt: fmt || 'docx', content, updated: Date.now() };
@@ -1160,11 +1297,7 @@ function stripExt(name) {
   return name.replace(/\.[^.]+$/, '');
 }
 
-function sanitizeImportedHtml(html) {
-  return String(html)
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
-    .replace(/\son\w+=["'][^"']*["']/gi, '');
-}
+
 
 function textToHtml(text) {
   const normalized = String(text || '').replace(/\r\n?/g, '\n');
@@ -1179,6 +1312,13 @@ function fmt(cmd, val=null) {
   reflowAll();
   counts();
 }
+document.addEventListener('pointerdown', (e) => {
+  const btn = e.target.closest('.tb[data-tip]');
+  if (!btn) return;
+  if (btn._tipTimer) clearTimeout(btn._tipTimer);
+  btn.classList.add('tip-show');
+  btn._tipTimer = setTimeout(() => btn.classList.remove('tip-show'), 1200);
+});
 function fmtBlock(tag) {
   focusActiveEditor();
   document.execCommand('formatBlock', false, tag);
@@ -1282,6 +1422,16 @@ function appendPage() {
   const node = createPage('');
   pages.appendChild(node);
   return node.querySelector('.editor');
+}
+function addPage() {
+  const ed = appendPage();
+  setTimeout(() => {
+    if (ed) {
+      ed.focus();
+      ed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, 0);
+  counts();
 }
 
 function isOverflowing(editor) {
@@ -1463,9 +1613,9 @@ function exportAs(type) {
   } else if (type==='html') {
     const page = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${d.name}</title><style>body{font-family:Georgia,serif;max-width:720px;margin:48px auto;padding:0 24px;line-height:1.8;color:#222;font-size:16px}h1{font-size:32px;margin-bottom:16px}h2{font-size:24px;margin:28px 0 12px}h3{font-size:18px;margin:20px 0 8px}blockquote{border-left:2px solid #d4a853;padding-left:18px;color:#666;font-style:italic;margin:18px 0}table{border-collapse:collapse;width:100%;margin:14px 0}td,th{border:1px solid #ddd;padding:8px 12px}th{background:#f5f5f5;font-weight:600}</style></head><body>${html}</body></html>`;
     dl(d.name+'.html', page, 'text/html');
-  } else if (type==='doc') {
-    const word = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><title>${d.name}</title><style>body{font-family:Calibri,sans-serif;line-height:1.6;font-size:11pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:6px 10px}</style></head><body>${html}</body></html>`;
-    dl(d.name+'.doc', word, 'application/msword');
+  } else if (type==='docx') {
+    exportDocx(html, d.name);
+    return;
   } else if (type==='pdf') {
     printPdf(html, d.name);
     return;
@@ -1495,6 +1645,16 @@ function printPdf(html, title) {
     setTimeout(() => frame.remove(), 1500);
   }, 120);
   showToast('Print dialog opened');
+}
+function exportDocx(html, title) {
+  if (!window.htmlDocx || !window.saveAs) {
+    showToast('DOCX export unavailable');
+    return;
+  }
+  const page = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><style>body{font-family:Calibri,sans-serif;line-height:1.6;font-size:11pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:6px 10px}</style></head><body>${html}</body></html>`;
+  const blob = window.htmlDocx.asBlob(page);
+  window.saveAs(blob, `${title}.docx`);
+  showToast('Exported as DOCX');
 }
 function htmlToMarkdown(html) {
   const wrap = document.createElement('div');
